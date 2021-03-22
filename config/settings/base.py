@@ -191,7 +191,7 @@ CELERYD_TASK_SOFT_TIME_LIMIT = 60  # 任务的软时间限制，超时候SoftTim
 ACCOUNT_ALLOW_REGISTRATION = env.bool('DJANGO_ACCOUNT_ALLOW_REGISTRATION', True)
 ACCOUNT_AUTHENTICATION_METHOD = 'username'
 ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_EMAIL_VERIFICATION = 'none'    # 可选，【mandatory】邮箱验证、【none】不开启邮箱验证、【optional】可选验证
 ACCOUNT_ADAPTER = 'answer.users.adapters.AccountAdapter'
 SOCIALACCOUNT_ADAPTER = 'answer.users.adapters.SocialAccountAdapter'
 
