@@ -6,6 +6,9 @@ from django.conf import settings
 from django.http import HttpRequest
 
 
+'''
+适配器：将自定义的 user 模型，与默认的 Django allauth 进行转换，起到适配的效果
+'''
 class AccountAdapter(DefaultAccountAdapter):
 
     def is_open_for_signup(self, request: HttpRequest):

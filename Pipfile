@@ -35,8 +35,19 @@ mysqlclient = "==1.4.2.post1"
 Pillow = "==5.4.1"
 Django = "==2.1.7"
 Sphinx = "==1.8.4"
+sorl-thumbnail = "==12.5.0"
 
 [dev-packages]
+coverage = "==4.5.2"
+flake8 = "==3.7.7"
+pylint-common = "==0.2.5"
+pylint-django = "==2.0.6"
+pylint = "==2.3.0"
+django-coverage-plugin = "==1.6.0"
+django-debug-toolbar = "==1.11"
+django-extensions = "==2.1.6"
+django-test-plus = "==1.1.1"
+pytest-django = "==3.4.8"
 
 [requires]
 python_version = "3.7"

@@ -160,30 +160,7 @@ djangorestframework==3.9.1  # https://github.com/encode/django-rest-framework
 coreapi==2.3.3  # https://github.com/core-api/python-client
 ```
 
-### 1.3 更改 Pipfile 镜像源
-- `Pipfile` ：包管理器，【替代原来的requirements.txt】
-```text
-[[source]]
-url = "https://pypi.tuna.tsinghua.edu.cn/simple/"
-verify_ssl = true
-name = "pypi"
-
-[packages]
-
-[dev-packages]
-
-[requires]
-python_version = "3.7"
-```
-
-### 1.4 使用 Pipenv 下载环境依赖
-- `/root/answer` ：Pipenv，【下载项目依赖，命令如下】
-```text
-cd /root/answer
-pipenv install -r requirements/local.txt
-```
-
-### 1.5 修改 base.py、local.py、production.py 配置文件
+### 1.3 修改 base.py、local.py、production.py 配置文件
 - `config/settings/base.py` ：基本环境，【修改如下】
 ```python
 """
@@ -238,7 +215,6 @@ THIRD_PARTY_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    'rest_framework',
 ]
 LOCAL_APPS = [
     'answer.users.apps.UsersAppConfig',
@@ -571,18 +547,20 @@ application = get_wsgi_application()
 # application = HelloWorldApplication(application)
 ```
 
-### 1.6 编写 env.py 配置文件
+### 1.4 编写 env.py 配置文件
 - `env.py` ：外部配置文件，【主要包含以下六类配置】
 ```text
 # MySQL 连接配置
-DATABASE_URL=mysql://halavah:KC5JNCL6d3zCtpE2@127.0.0.1:3306/answer
+DATABASE_URL=mysql://answer:kBeZGFXBEz244mAp@127.0.0.1:3306/answer
 
 # Redis连接配置
 REDIS_URL=redis://127.0.0.1:6379
 
 # Django基本配置
-DJANGO_DEBUG=True  # 开启调试功能
-DJANGO_ACCOUNT_ALLOW_REGISTRATION=True  # 是否允许用户注册
+# 开启调试功能
+DJANGO_DEBUG=True
+# 是否允许用户注册
+DJANGO_ACCOUNT_ALLOW_REGISTRATION=True
 DJANGO_SECRET_KEY=Tb8iqRxXPbube2qD9nJBxMtkCYAEK0jqzLtXEczynjjHuV2h7duQk5Qox4lYoPDC
 
 # Django生产环境配置
@@ -602,44 +580,22 @@ DJANGO_EMAIL_HOST_PASSWORD=im0OCs0cia1
 DJANGO_DEFAULT_FROM_EMAIL=imooc@socialmail.liaogx.com
 
 # Celery配置
-CELERY_BROKER_URL=redis://localhost:6379/1      # 消息代理：使用Redis 1
-CELERY_RESULT_BACKEND=redis://localhost:6379/2  # 任务结果：使用Redis 2
+# 消息代理：使用Redis 1
+CELERY_BROKER_URL=redis://localhost:6379/1
+# 任务结果：使用Redis 2
+CELERY_RESULT_BACKEND=redis://localhost:6379/2
 ```
 - `.gitignore` ：配置文件，【忽略 .env 文件】
 ```text
 .env
 ```
 
-### 1.7 修改 answer 核心文件
-- `answer/users/admin.py` ：删除该文件，【删除有关于 admin 后台管理的内容】
-```python
-from django.contrib import admin
-from django.contrib.auth import admin as auth_admin
-from django.contrib.auth import get_user_model
-
-from answer.users.forms import UserChangeForm, UserCreationForm
-
-User = get_user_model()
-
-
-@admin.register(User)
-class UserAdmin(auth_admin.UserAdmin):
-
-    form = UserChangeForm
-    add_form = UserCreationForm
-    fieldsets = (("User", {"fields": ("name",)}),) + auth_admin.UserAdmin.fieldsets
-    list_display = ["username", "name", "is_superuser"]
-    search_fields = ["name"]
-```  
-- `config/urls.py` ：修改该文件，【删除有关于 admin 后台管理的内容】
-```python
-from django.contrib import admin
-
-# Django Admin, use {% url 'admin:index' %}
-path(settings.ADMIN_URL, admin.site.urls),
+### 1.5 项目第一次运行
+- `/root/answer` ：Pipenv，【项目依赖，命令如下】
+```text
+cd /root/answer
+pipenv install -r requirements/local.txt
 ```
-
-### 1.8 项目第一次运行
 - `/root/answer` ：Pipenv，【生成数据库，命令如下】
 ```text
 cd /root/answer
@@ -647,5 +603,6 @@ pipenv run python manage.py migrate
 ```
 - `/root/answer` ：Pipenv，【运行项目，命令如下】
 ```text
+cd /root/answer
 pipenv run python manage.py runserver 0.0.0.0:8000
 ```

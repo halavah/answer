@@ -42,15 +42,16 @@ DJANGO_APPS = [
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.humanize',  # Handy template tags
-    'django.contrib.admin',
+    'django.contrib.humanize',
+    'django.forms',             # 表单
 ]
 THIRD_PARTY_APPS = [
-    'crispy_forms',
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'rest_framework',
+    'crispy_forms',             # crispy_forms_tags 标签
+    'sorl.thumbnail',           # thumbnail 处理图片
+    'allauth',                  # allauth 用户权限
+    'allauth.account',          # allauth.account 生成的数据表（2张）：account_emailaddress、account_emailconfirmation
+    'allauth.socialaccount',    # allauth.socialaccount 生成的数据表（4张）：socialaccount_socialaccount、socialaccount_socialapp、socialaccount_socialapp_sites、socialaccount_socialtoken
+    'allauth.socialaccount.providers.github'  # 实现 Github 第三方登录
 ]
 LOCAL_APPS = [
     'answer.users.apps.UsersAppConfig',
@@ -64,11 +65,11 @@ MIGRATION_MODULES = {
 
 # AUTHENTICATION：验证
 AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',            # django默认的认证
+    'django.contrib.auth.backends.ModelBackend',  # django默认的认证
     'allauth.account.auth_backends.AuthenticationBackend',  # django-allauth的认证
 ]
 AUTH_USER_MODEL = 'users.User'
-LOGIN_REDIRECT_URL = 'users:redirect'                       # 登录跳转配置
+LOGIN_REDIRECT_URL = 'account_logout'  # 登录跳转配置
 LOGIN_URL = 'account_login'
 
 # PASSWORDS：密码加密
@@ -107,9 +108,9 @@ MIDDLEWARE = [
 
 # STATIC：静态文件
 STATIC_ROOT = str(ROOT_DIR('staticfiles'))
-STATIC_URL = '/static/'                         # 指定静态目录的URL
+STATIC_URL = '/static/'  # 指定静态目录的URL
 STATICFILES_DIRS = [
-    str(APPS_DIR.path('static')),               # 引用位于STATIC_ROOT中的静态文件时使用的网址
+    str(APPS_DIR.path('static')),  # 引用位于STATIC_ROOT中的静态文件时使用的网址
 ]
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',
@@ -117,7 +118,7 @@ STATICFILES_FINDERS = [
 ]
 
 # MEDIA：媒体
-MEDIA_ROOT = str(APPS_DIR('media'))             # 在Windows开发环境下加上.replace("\\", "/")
+MEDIA_ROOT = str(APPS_DIR('media'))  # 在Windows开发环境下加上.replace("\\", "/")
 MEDIA_URL = '/media/'
 
 # TEMPLATES：模板引擎
@@ -168,12 +169,12 @@ EMAIL_HOST_USER = env('DJANGO_EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = env('DJANGO_EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = env('DJANGO_DEFAULT_FROM_EMAIL')
 
-# ADMIN：后台管理
-ADMIN_URL = 'admin/'
-ADMINS = [
-    ("""halavah""", 'halavah@126.com'),
-]
-MANAGERS = ADMINS
+# # ADMIN：后台管理
+# ADMIN_URL = 'admin/'
+# ADMINS = [
+#     ("""halavah""", 'halavah@126.com'),
+# ]
+# MANAGERS = ADMINS
 
 # Celery：异步任务队列
 INSTALLED_APPS += ['answer.taskapp.celery.CeleryAppConfig']
@@ -191,10 +192,11 @@ CELERYD_TASK_SOFT_TIME_LIMIT = 60  # 任务的软时间限制，超时候SoftTim
 ACCOUNT_ALLOW_REGISTRATION = env.bool('DJANGO_ACCOUNT_ALLOW_REGISTRATION', True)
 ACCOUNT_AUTHENTICATION_METHOD = 'username'
 ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_EMAIL_VERIFICATION = 'none'    # 可选，【mandatory】邮箱验证、【none】不开启邮箱验证、【optional】可选验证
+ACCOUNT_EMAIL_VERIFICATION = 'none'  # 可选，【mandatory】邮箱验证、【none】不开启邮箱验证、【optional】可选验证
 ACCOUNT_ADAPTER = 'answer.users.adapters.AccountAdapter'
 SOCIALACCOUNT_ADAPTER = 'answer.users.adapters.SocialAccountAdapter'
 
 # django-compressor：压缩
 INSTALLED_APPS += ['compressor']
 STATICFILES_FINDERS += ['compressor.finders.CompressorFinder']
+
